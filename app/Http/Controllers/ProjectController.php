@@ -56,6 +56,10 @@ class ProjectController extends Controller
         $project->name = $request->name;
         $project->save();
 
+        if ($project->isClean()) {
+            Stat::increment('projects_count', 1);
+        }
+
         return redirect('/')->with('success', 'Project created');
     }
 }
