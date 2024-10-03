@@ -46,9 +46,13 @@ class UserController extends Controller
         // TASK: find a user by $name and update it with $email
         //   if not found, create a user with $name, $email and random password
         $user = User::firstOrCreate(
-            ['name' => $name, 'email' => $email],
-            ['name' => $name, 'email' => $email, 'password' => Str::random(10)]
+            ['name' => $name],
+            ['email' => $email, 'password' => Str::random(10)]
         ); // updated or created user
+
+        if ($user->wasRecentlyCreated === false) {
+            $user->update(['email' => $email]);
+        }
 
         return view('users.show', compact('user'));
     }
